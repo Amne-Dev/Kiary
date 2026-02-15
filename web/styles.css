@@ -460,13 +460,13 @@ code {
 }
 
 .policy-card h1 {
-  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
   margin-top: 0.2rem;
 }
 
 .policy-card h2 {
   margin-top: 1.3rem;
-  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-size: clamp(1rem, 1.45vw, 1.14rem);
 }
 
 .policy-card p {
