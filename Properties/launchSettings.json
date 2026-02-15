@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EncryptedDiary.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "EncryptedDiary.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

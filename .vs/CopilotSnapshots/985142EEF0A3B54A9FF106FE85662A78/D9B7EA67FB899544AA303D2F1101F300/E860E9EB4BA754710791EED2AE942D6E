@@ -1,0 +1,675 @@
+﻿using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Media;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text.Json;
+using Windows.UI;
+
+namespace EncryptedDiary.WinUI;
+
+public sealed partial class MainWindow : Window
+{
+    private static readonly TimeSpan AutoSaveInterval = TimeSpan.FromSeconds(20);
+
+    private readonly DiaryRepository _repository = new();
+    private readonly ObservableCollection<DiaryEntry> _entries = new();
+    private readonly DispatcherTimer _autoSaveTimer = new() { Interval = AutoSaveInterval };
+
+    private DiaryDocument _document = new();
+    private DiaryEntry? _currentEntry;
+    private string? _masterPassword;
+    private bool _isLoading;
+    private bool _isDirty;
+    private bool _isInitialized;
+    private bool _syncingFormatControls;
+    private bool _backdropApplied;
+    private DateTimeOffset _lastAutoSaveErrorUtc = DateTimeOffset.MinValue;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        TryApplySystemBackdrop();
+
+        EntryList.ItemsSource = _entries;
+        FontSizeCombo.SelectedIndex = 2;
+        FontColorCombo.SelectedIndex = 0;
+        ModeCombo.SelectedIndex = 0;
+
+        _autoSaveTimer.Tick += AutoSaveTimer_Tick;
+        Activated += MainWindow_Activated;
+        Closed += MainWindow_Closed;
+    }
+
+    private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        if (_isInitialized)
+        {
+            return;
+        }
+
+        Activated -= MainWindow_Activated;
+        await InitializeVaultAsync();
+    }
+
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        _autoSaveTimer.Stop();
+        if (_isDirty)
+        {
+            SaveVault(isAutoSave: true);
+        }
+    }
+
+    private bool TryApplySystemBackdrop()
+    {
+        try
+        {
+            if (MicaController.IsSupported())
+            {
+                SystemBackdrop = new MicaBackdrop { Kind = MicaKind.BaseAlt };
+                _backdropApplied = true;
+                return true;
+            }
+
+            if (DesktopAcrylicController.IsSupported())
+            {
+                SystemBackdrop = new DesktopAcrylicBackdrop();
+                _backdropApplied = true;
+                return true;
+            }
+        }
+        catch
+        {
+            // Continue without backdrop.
+        }
+
+        _backdropApplied = false;
+        return false;
+    }
+
+    private async Task InitializeVaultAsync()
+    {
+        bool existingVault = _repository.Exists();
+        while (true)
+        {
+            string? password = await PromptForPasswordAsync(existingVault);
+            if (password is null)
+            {
+                App.Current.Exit();
+                return;
+            }
+
+            try
+            {
+                _masterPassword = password;
+                _document = _repository.LoadOrCreate(_masterPassword);
+                break;
+            }
+            catch (Exception ex) when (ex is CryptographicException or InvalidDataException or JsonException)
+            {
+                await ShowMessageAsync("Unlock failed", "Unable to unlock the diary. Check your password and try again.");
+                existingVault = true;
+            }
+        }
+
+        _entries.Clear();
+        foreach (DiaryEntry entry in _document.Entries.OrderByDescending(x => x.UpdatedUtc))
+        {
+            _entries.Add(entry);
+        }
+
+        if (_entries.Count == 0)
+        {
+            DiaryEntry first = CreateEntry("First Entry");
+            _entries.Add(first);
+            _isDirty = true;
+        }
+
+        EntryList.SelectedIndex = 0;
+        _isInitialized = true;
+        _autoSaveTimer.Start();
+
+        string effectStatus = _backdropApplied ? "Mica/Acrylic active." : "Backdrop unsupported on this setup.";
+        UpdateStatus($"Diary unlocked. {effectStatus} Auto-save every {AutoSaveInterval.TotalSeconds:0}s.");
+    }
+
+    private async Task<string?> PromptForPasswordAsync(bool existingVault)
+    {
+        while (true)
+        {
+            PasswordBox primaryBox = new();
+            PasswordBox confirmBox = new();
+            StackPanel panel = new() { Spacing = 10 };
+            panel.Children.Add(new TextBlock
+            {
+                Text = existingVault
+                    ? "Enter your master password to unlock your diary."
+                    : "Create a master password for your encrypted diary vault."
+            });
+            panel.Children.Add(primaryBox);
+            if (!existingVault)
+            {
+                panel.Children.Add(new TextBlock { Text = "Confirm password" });
+                panel.Children.Add(confirmBox);
+            }
+
+            ContentDialog dialog = new()
+            {
+                Title = existingVault ? "Unlock Diary" : "Create Diary Password",
+                PrimaryButtonText = existingVault ? "Unlock" : "Create",
+                CloseButtonText = "Exit",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = panel,
+                XamlRoot = GetXamlRoot()
+            };
+
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                return null;
+            }
+
+            string password = primaryBox.Password;
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                await ShowMessageAsync("Validation", "Password cannot be empty.");
+                continue;
+            }
+
+            if (!existingVault && password != confirmBox.Password)
+            {
+                await ShowMessageAsync("Validation", "Passwords do not match.");
+                continue;
+            }
+
+            return password;
+        }
+    }
+
+    private async Task ShowMessageAsync(string title, string message)
+    {
+        ContentDialog dialog = new()
+        {
+            Title = title,
+            Content = message,
+            CloseButtonText = "OK",
+            XamlRoot = GetXamlRoot()
+        };
+        await dialog.ShowAsync();
+    }
+
+    private XamlRoot GetXamlRoot()
+    {
+        if (Content is FrameworkElement element && element.XamlRoot is not null)
+        {
+            return element.XamlRoot;
+        }
+
+        throw new InvalidOperationException("XamlRoot is not available.");
+    }
+
+    private DiaryEntry CreateEntry(string title)
+    {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        return new DiaryEntry
+        {
+            Title = title,
+            CreatedUtc = now,
+            UpdatedUtc = now,
+            Format = EntryFormat.RichText,
+            RichTextRtf = string.Empty,
+            MarkdownText = string.Empty
+        };
+    }
+
+    private void EntryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (EntryList.SelectedItem is DiaryEntry selected)
+        {
+            LoadEntry(selected);
+        }
+    }
+
+    private void LoadEntry(DiaryEntry entry)
+    {
+        _currentEntry = entry;
+        _isLoading = true;
+
+        TitleBox.Text = entry.Title;
+        SetRichText(entry.RichTextRtf);
+        MarkdownEditor.Text = entry.MarkdownText;
+        SelectMode(entry.Format);
+        ApplyEditorMode(entry.Format);
+        SyncFormatControls();
+
+        _isLoading = false;
+        UpdateStatus($"Editing \"{entry.DisplayTitle}\"");
+    }
+
+    private void SelectMode(EntryFormat format)
+    {
+        foreach (object item in ModeCombo.Items)
+        {
+            if (item is ComboBoxItem comboItem &&
+                comboItem.Tag is string tag &&
+                string.Equals(tag, format.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                ModeCombo.SelectedItem = comboItem;
+                return;
+            }
+        }
+
+        ModeCombo.SelectedIndex = 0;
+    }
+
+    private EntryFormat GetSelectedFormat()
+    {
+        if (ModeCombo.SelectedItem is ComboBoxItem comboItem &&
+            comboItem.Tag is string tag &&
+            Enum.TryParse(tag, out EntryFormat format))
+        {
+            return format;
+        }
+
+        return EntryFormat.RichText;
+    }
+
+    private void ApplyEditorMode(EntryFormat format)
+    {
+        bool richMode = format == EntryFormat.RichText;
+        RichEditorHost.Visibility = richMode ? Visibility.Visible : Visibility.Collapsed;
+        MarkdownEditorHost.Visibility = richMode ? Visibility.Collapsed : Visibility.Visible;
+        RichToolbar.IsEnabled = richMode;
+        RichToolbar.Opacity = richMode ? 1.0 : 0.58;
+    }
+
+    private void NewEntryButton_Click(object sender, RoutedEventArgs e)
+    {
+        DiaryEntry entry = CreateEntry($"Entry {_entries.Count + 1}");
+        _entries.Insert(0, entry);
+        EntryList.SelectedItem = entry;
+        MarkDirty("Created a new entry.");
+    }
+
+    private async void DeleteEntryButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentEntry is null)
+        {
+            return;
+        }
+
+        ContentDialog dialog = new()
+        {
+            Title = "Delete entry",
+            Content = $"Delete \"{_currentEntry.DisplayTitle}\"?",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = GetXamlRoot()
+        };
+
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        DiaryEntry removed = _currentEntry;
+        _entries.Remove(removed);
+        if (_entries.Count == 0)
+        {
+            _entries.Add(CreateEntry("First Entry"));
+        }
+
+        EntryList.SelectedIndex = 0;
+        MarkDirty("Entry deleted.");
+    }
+
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        SaveVault();
+    }
+
+    private void AutoSaveTimer_Tick(object? sender, object e)
+    {
+        if (!_isInitialized || !_isDirty || string.IsNullOrWhiteSpace(_masterPassword))
+        {
+            return;
+        }
+
+        if (SaveVault(isAutoSave: true))
+        {
+            return;
+        }
+
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        if (now - _lastAutoSaveErrorUtc > TimeSpan.FromMinutes(1))
+        {
+            UpdateStatus("Auto-save failed. Use Save button.");
+            _lastAutoSaveErrorUtc = now;
+        }
+    }
+
+    private bool SaveVault(bool isAutoSave = false)
+    {
+        if (string.IsNullOrWhiteSpace(_masterPassword))
+        {
+            return false;
+        }
+
+        try
+        {
+            if (_currentEntry is not null)
+            {
+                _currentEntry.RichTextRtf = GetRichText();
+                _currentEntry.MarkdownText = MarkdownEditor.Text;
+            }
+
+            _document.Entries = _entries.OrderByDescending(x => x.UpdatedUtc).ToList();
+            _repository.Save(_document, _masterPassword);
+            _isDirty = false;
+            UpdateStatus($"{(isAutoSave ? "Auto-saved" : "Saved")} at {DateTime.Now:t}");
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private void TitleBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_isLoading || _currentEntry is null)
+        {
+            return;
+        }
+
+        _currentEntry.Title = string.IsNullOrWhiteSpace(TitleBox.Text) ? "Untitled Entry" : TitleBox.Text.Trim();
+        TouchAndMove(_currentEntry);
+        MarkDirty("Title updated.");
+    }
+
+    private void ModeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isLoading || _currentEntry is null)
+        {
+            return;
+        }
+
+        EntryFormat format = GetSelectedFormat();
+        _currentEntry.Format = format;
+        TouchAndMove(_currentEntry);
+        ApplyEditorMode(format);
+        MarkDirty("Editor mode changed.");
+    }
+
+    private void RichEditor_TextChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _currentEntry is null)
+        {
+            return;
+        }
+
+        _currentEntry.RichTextRtf = GetRichText();
+        TouchAndMove(_currentEntry);
+        MarkDirty("Rich text updated.");
+    }
+
+    private void MarkdownEditor_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_isLoading || _currentEntry is null)
+        {
+            return;
+        }
+
+        _currentEntry.MarkdownText = MarkdownEditor.Text;
+        TouchAndMove(_currentEntry);
+        MarkDirty("Markdown updated.");
+    }
+
+    private void RichEditor_SelectionChanged(object sender, RoutedEventArgs e)
+    {
+        if (_isLoading || _syncingFormatControls)
+        {
+            return;
+        }
+
+        SyncFormatControls();
+    }
+
+    private void BoldButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!CanFormatRichText())
+        {
+            return;
+        }
+
+        ITextCharacterFormat format = RichEditor.Document.Selection.CharacterFormat;
+        format.Bold = format.Bold == FormatEffect.On ? FormatEffect.Off : FormatEffect.On;
+        TouchCurrentAndDirty("Formatting updated.");
+    }
+
+    private void ItalicButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!CanFormatRichText())
+        {
+            return;
+        }
+
+        ITextCharacterFormat format = RichEditor.Document.Selection.CharacterFormat;
+        format.Italic = format.Italic == FormatEffect.On ? FormatEffect.Off : FormatEffect.On;
+        TouchCurrentAndDirty("Formatting updated.");
+    }
+
+    private void UnderlineButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!CanFormatRichText())
+        {
+            return;
+        }
+
+        ITextCharacterFormat format = RichEditor.Document.Selection.CharacterFormat;
+        format.Underline = format.Underline == UnderlineType.None ? UnderlineType.Single : UnderlineType.None;
+        TouchCurrentAndDirty("Formatting updated.");
+    }
+
+    private void ClearFormatButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!CanFormatRichText())
+        {
+            return;
+        }
+
+        ITextCharacterFormat format = RichEditor.Document.Selection.CharacterFormat;
+        format.Bold = FormatEffect.Off;
+        format.Italic = FormatEffect.Off;
+        format.Underline = UnderlineType.None;
+        format.ForegroundColor = Colors.Black;
+        format.Size = 16;
+        TouchCurrentAndDirty("Formatting cleared.");
+    }
+
+    private void FontSizeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isLoading || _syncingFormatControls || FontSizeCombo.SelectedItem is not ComboBoxItem item)
+        {
+            return;
+        }
+
+        if (!double.TryParse(item.Content?.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out double size))
+        {
+            return;
+        }
+
+        if (CanFormatRichText())
+        {
+            RichEditor.Document.Selection.CharacterFormat.Size = size;
+            TouchCurrentAndDirty("Font size updated.");
+            return;
+        }
+
+        MarkdownEditor.FontSize = size;
+        UpdateStatus($"Markdown font size set to {size:0}.");
+    }
+
+    private void FontColorCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isLoading || _syncingFormatControls || FontColorCombo.SelectedItem is not ComboBoxItem item)
+        {
+            return;
+        }
+
+        if (item.Tag is not string hex || !TryParseColor(hex, out Color color))
+        {
+            return;
+        }
+
+        if (CanFormatRichText())
+        {
+            RichEditor.Document.Selection.CharacterFormat.ForegroundColor = color;
+            TouchCurrentAndDirty("Font color updated.");
+            return;
+        }
+
+        MarkdownEditor.Foreground = new SolidColorBrush(color);
+        UpdateStatus($"Markdown font color set to {item.Content}.");
+    }
+
+    private bool CanFormatRichText()
+    {
+        return _currentEntry is not null && GetSelectedFormat() == EntryFormat.RichText;
+    }
+
+    private void SyncFormatControls()
+    {
+        _syncingFormatControls = true;
+        try
+        {
+            double size = RichEditor.Document.Selection.CharacterFormat.Size;
+            if (size > 0)
+            {
+                SelectFontSize(size);
+            }
+
+            Color color = RichEditor.Document.Selection.CharacterFormat.ForegroundColor;
+            SelectFontColor(color);
+        }
+        finally
+        {
+            _syncingFormatControls = false;
+        }
+    }
+
+    private void SelectFontSize(double value)
+    {
+        ComboBoxItem? best = FontSizeCombo.Items
+            .OfType<ComboBoxItem>()
+            .OrderBy(item =>
+            {
+                if (!double.TryParse(item.Content?.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out double candidate))
+                {
+                    return double.MaxValue;
+                }
+
+                return Math.Abs(candidate - value);
+            })
+            .FirstOrDefault();
+
+        if (best is not null)
+        {
+            FontSizeCombo.SelectedItem = best;
+        }
+    }
+
+    private void SelectFontColor(Color color)
+    {
+        string hex = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        ComboBoxItem? match = FontColorCombo.Items
+            .OfType<ComboBoxItem>()
+            .FirstOrDefault(item => string.Equals(item.Tag?.ToString(), hex, StringComparison.OrdinalIgnoreCase));
+
+        if (match is not null)
+        {
+            FontColorCombo.SelectedItem = match;
+        }
+    }
+
+    private static bool TryParseColor(string hex, out Color color)
+    {
+        color = Colors.Black;
+        string text = hex.TrimStart('#');
+        if (text.Length != 6 ||
+            !byte.TryParse(text[0..2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte r) ||
+            !byte.TryParse(text[2..4], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte g) ||
+            !byte.TryParse(text[4..6], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte b))
+        {
+            return false;
+        }
+
+        color = Color.FromArgb(255, r, g, b);
+        return true;
+    }
+
+    private string GetRichText()
+    {
+        RichEditor.Document.GetText(TextGetOptions.FormatRtf, out string value);
+        return value;
+    }
+
+    private void SetRichText(string? rtf)
+    {
+        if (string.IsNullOrWhiteSpace(rtf))
+        {
+            RichEditor.Document.SetText(TextSetOptions.None, "Start writing...");
+            return;
+        }
+
+        try
+        {
+            RichEditor.Document.SetText(TextSetOptions.FormatRtf, rtf);
+        }
+        catch
+        {
+            RichEditor.Document.SetText(TextSetOptions.None, rtf);
+        }
+    }
+
+    private void TouchAndMove(DiaryEntry entry)
+    {
+        entry.UpdatedUtc = DateTimeOffset.UtcNow;
+        int index = _entries.IndexOf(entry);
+        if (index <= 0)
+        {
+            return;
+        }
+
+        _entries.RemoveAt(index);
+        _entries.Insert(0, entry);
+        EntryList.SelectedItem = entry;
+    }
+
+    private void TouchCurrentAndDirty(string message)
+    {
+        if (_currentEntry is null)
+        {
+            return;
+        }
+
+        TouchAndMove(_currentEntry);
+        MarkDirty(message);
+    }
+
+    private void MarkDirty(string message)
+    {
+        _isDirty = true;
+        UpdateStatus(message);
+    }
+
+    private void UpdateStatus(string message)
+    {
+        StatusText.Text = message;
+    }
+}

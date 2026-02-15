@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="EncryptedDiary.WinUI.csproj">
+        <Platform Solution="Debug|*" Project="x64" />
+        <Deploy />
+    </Project>
+</Solution>

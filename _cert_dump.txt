@@ -1,0 +1,127 @@
+X509 Certificate:
+Version: 3
+Serial Number: 778dce1d9f3e349144f0c223c06abf44
+    44 bf 6a c0 23 c2 f0 44  91 34 3e 9f 1d ce 8d 77
+Signature Algorithm:
+    Algorithm ObjectId: 1.2.840.113549.1.1.11 sha256RSA
+    Algorithm Parameters:
+    05 00
+Issuer:
+    CN=User Name
+    [0,0]: CERT_RDN_UTF8_STRING, Length = 9 (9/64 Characters)
+        2.5.4.3 Common Name (CN)="User Name"
+
+        55 73 65 72 20 4e 61 6d  65                        User Name
+
+        55 00 73 00 65 00 72 00  20 00 4e 00 61 00 6d 00   U.s.e.r. .N.a.m.
+        65 00                                              e.
+
+  Name Hash(sha1): e9b29ede399961b868d12c4ef4c269dcd964dabd
+  Name Hash(md5): 2d12e7c67796aab4d73496071d38e95a
+
+ NotBefore: 2/14/2026 9:36 PM
+ NotAfter: 2/14/2031 9:46 PM
+
+Subject:
+    CN=User Name
+    [0,0]: CERT_RDN_UTF8_STRING, Length = 9 (9/64 Characters)
+        2.5.4.3 Common Name (CN)="User Name"
+
+        55 73 65 72 20 4e 61 6d  65                        User Name
+
+        55 00 73 00 65 00 72 00  20 00 4e 00 61 00 6d 00   U.s.e.r. .N.a.m.
+        65 00                                              e.
+
+  Name Hash(sha1): e9b29ede399961b868d12c4ef4c269dcd964dabd
+  Name Hash(md5): 2d12e7c67796aab4d73496071d38e95a
+
+Public Key Algorithm:
+    Algorithm ObjectId: 1.2.840.113549.1.1.1 RSA
+    Algorithm Parameters:
+    05 00
+Public Key Length: 2048 bits
+Public Key: UnusedBits = 0
+    0000  30 82 01 0a 02 82 01 01  00 d4 3b 2a 4c 26 c2 6e
+    0010  9d fd 10 ea 27 79 d1 ab  c8 81 ab 20 14 cb 57 6d
+    0020  25 3d 2c a7 7d 7d 61 24  42 57 26 c2 e4 84 5b 29
+    0030  16 e4 a4 77 78 af d8 04  f4 5e 3c 91 02 91 98 12
+    0040  ae 1d ca 48 4a f6 b8 4f  1d 06 51 a8 fe bd dc e7
+    0050  f9 61 46 93 1d be e6 13  37 42 d0 b9 45 f2 0c 47
+    0060  fc 61 a9 0c 98 0a b3 07  ba e3 5d b1 38 00 7a 1c
+    0070  e0 57 e5 83 ff 4b 72 45  8a c2 86 59 43 16 04 96
+    0080  4d 00 d0 a8 44 6a ae cc  85 17 f7 77 dd c8 d6 9a
+    0090  e4 35 a2 0e 92 d5 48 1a  c7 79 ac 58 ce e7 00 f5
+    00a0  fc dd 5b bf 02 23 a0 2e  f1 85 3c 69 6f 23 45 28
+    00b0  2a 86 52 57 94 d7 05 82  68 83 bb e4 c7 ed d1 b2
+    00c0  02 85 3f ba c6 50 cf ea  33 1b c2 51 0a ff ed 8e
+    00d0  9d 6f 58 81 9f 83 3a c1  76 d5 41 9f 83 01 d5 ec
+    00e0  09 32 4f ac c1 26 5d 7a  67 22 41 be 75 a5 da 6a
+    00f0  27 2c 06 31 10 f2 a9 7e  9e 2e 48 98 42 0f 6f 07
+    0100  c9 93 be da 84 70 24 24  a5 02 03 01 00 01
+Certificate Extensions: 3
+    2.5.29.15: Flags = 1(Critical), Length = 4
+    Key Usage
+        Digital Signature (80)
+
+    0000  03 02 07 80                                        ....
+0000: 03 02					; BIT_STRING (2 Bytes)
+0002:    07
+0003:    80
+
+    2.5.29.37: Flags = 0, Length = c
+    Enhanced Key Usage
+        Code Signing (1.3.6.1.5.5.7.3.3)
+
+    0000  30 0a 06 08 2b 06 01 05  05 07 03 03               0...+.......
+0000: 30 0a					; SEQUENCE (a Bytes)
+0002:    06 08					; OBJECT_ID (8 Bytes)
+0004:       2b 06 01 05 05 07 03 03
+               ; 1.3.6.1.5.5.7.3.3 Code Signing
+
+    2.5.29.14: Flags = 0, Length = 16
+    Subject Key Identifier
+        c3e2fb0f60aeefbd717a6c095437cb2b6eaf6ef3
+
+    0000  04 14 c3 e2 fb 0f 60 ae  ef bd 71 7a 6c 09 54 37   ......`...qzl.T7
+    0010  cb 2b 6e af 6e f3                                  .+n.n.
+0000: 04 14					; OCTET_STRING (14 Bytes)
+0002:    c3 e2 fb 0f 60 ae ef bd  71 7a 6c 09 54 37 cb 2b  ; ....`...qzl.T7.+
+0012:    6e af 6e f3                                       ; n.n.
+
+Signature Algorithm:
+    Algorithm ObjectId: 1.2.840.113549.1.1.11 sha256RSA
+    Algorithm Parameters:
+    05 00
+Signature: UnusedBits=0
+    0000  b7 4c e8 a5 42 a7 bc 99  cc de 10 25 da d2 bc 6e
+    0010  92 80 d3 be 91 4f 24 34  ae 62 78 1b 6a 82 ce 51
+    0020  13 08 e2 fc 49 bc 84 e9  6d 85 cc 2d b2 f1 2a b4
+    0030  39 7f 69 4b 24 23 3b 24  18 0e 0d 73 4c 33 d7 29
+    0040  1b a3 e2 f1 9f fb d8 6d  19 f8 84 41 7f 26 2d 8a
+    0050  d1 4d 18 6c 7a 91 83 fc  05 3f 09 f7 15 55 f8 0d
+    0060  3f 11 02 60 15 1c 11 ab  d4 e4 f9 45 20 88 65 97
+    0070  8c 42 9e e6 3e 8b 72 f1  19 ab 14 e7 d1 90 67 30
+    0080  e3 34 db 3a 31 d1 cc e0  52 3a 14 f1 b2 9f 5d 07
+    0090  45 d9 9d 8d 48 18 2f 27  d4 59 39 1b 97 08 25 75
+    00a0  ee b2 4d 80 a7 e5 84 f0  08 4b 97 10 83 bf 51 3a
+    00b0  5e ca c5 ce e3 d2 1c 31  5f 7d 6a 3c 3d c0 be 61
+    00c0  61 01 e7 74 09 d6 e6 4e  8f 29 aa 6d 75 4f b6 27
+    00d0  44 0e d6 64 99 80 92 8a  30 c1 56 c4 a3 e7 55 61
+    00e0  96 60 b1 2b 71 d5 b7 7e  60 d9 ec 49 ae ff a1 3d
+    00f0  24 ae a9 ec 76 d5 02 fc  eb dd e1 18 d4 28 aa 94
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Key Id Hash(rfc-sha1): c3e2fb0f60aeefbd717a6c095437cb2b6eaf6ef3
+Key Id Hash(sha1): 445e35c5eb78d01e43ed5db3584b38f4c96f3d1a
+Key Id Hash(bcrypt-sha1): 66eb41e09c2fc5bf1cad15e875377274272f1c95
+Key Id Hash(bcrypt-sha256): 359aa14cc9d5245e0d8e4601ab0fc9ad8c34f58d26b921fc8187f6149f9e5f3f
+Key Id Hash(md5): d8c4725d4cfd482b4868402f19baccc4
+Key Id Hash(sha256): 76ad5b4459594193cb6768c5c14fe014550a144817a5caf914b83e0b23264c7b
+Key Id Hash(pin-sha256): y7jhbfz9dYVpxeULIvTHR1FCIpI52Obup7Z0xfL+eYs=
+Key Id Hash(pin-sha256-hex): cbb8e16dfcfd758569c5e50b22f4c7475142229239d8e6eea7b674c5f2fe798b
+Cert Hash(md5): 50fae67baef430ca7a179c1d6e248265
+Cert Hash(sha1): 3588694a52519e5ccd9d50148e7bb79aee48c64f
+Cert Hash(sha256): 3b47f2a5a3a5eb3c8c98d6eaf9f4aef41c4a8f329b667b1a98c8e9106a4fde9e
+Signature Hash: 6438296f42ecbb1aa3da1a50570c217f3f1a81a6058cdda67f963dcb3b9bed3c
+CertUtil: -dump command completed successfully.
+

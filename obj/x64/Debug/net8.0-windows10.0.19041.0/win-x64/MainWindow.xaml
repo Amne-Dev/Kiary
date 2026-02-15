@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="EncryptedDiary.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    
+    Title="Kiary">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Padding="16,12,16,10" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Spacing="2">
+                <TextBlock Text="Kiary" FontSize="24" FontWeight="SemiBold" />
+                <TextBlock Text="WinUI 3 notebook with Rich Text and Markdown" Opacity="0.76" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Button x:ConnectionId='19' x:Name="NewEntryButton" Content="New Entry"                              />
+                <Button x:ConnectionId='20' x:Name="DeleteEntryButton" Content="Delete Entry"                                 />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Padding="16,0,16,12" ColumnSpacing="14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderThickness="1" CornerRadius="12" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Entries" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <ListView x:ConnectionId='17' x:Name="EntryList"
+                              Grid.Row="1"
+                                                                           
+                              IsItemClickEnabled="False"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Spacing="2" Padding="2">
+                                    <TextBlock Text="{Binding DisplayTitle}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding DisplayUpdated}" Opacity="0.75" FontSize="12" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:ConnectionId='14' x:Name="TitleBox"
+                             PlaceholderText="Entry title"
+                                                                />
+                    <ComboBox x:ConnectionId='15' x:Name="ModeCombo"
+                              Grid.Column="1"
+                                                                           >
+                        <ComboBoxItem Tag="RichText" Content="Rich Text" />
+                        <ComboBoxItem Tag="Markdown" Content="Markdown" />
+                    </ComboBox>
+                    <Button x:ConnectionId='16' Grid.Column="2" Content="Save"                          />
+                </Grid>
+
+                <Border x:ConnectionId='3' x:Name="RichToolbar" Grid.Row="1" BorderThickness="1" CornerRadius="10" Padding="8">
+                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Button x:ConnectionId='8' x:Name="BoldButton" Content="B" FontWeight="Bold"                          />
+                        <Button x:ConnectionId='9' x:Name="ItalicButton" Content="I" FontStyle="Italic"                            />
+                        <Button x:ConnectionId='10' x:Name="UnderlineButton" Content="U"                               />
+                        <ComboBox x:ConnectionId='11' x:Name="FontSizeCombo"
+                                  Width="88"
+                                                                                   >
+                            <ComboBoxItem Content="12" />
+                            <ComboBoxItem Content="14" />
+                            <ComboBoxItem Content="16" />
+                            <ComboBoxItem Content="18" />
+                            <ComboBoxItem Content="20" />
+                            <ComboBoxItem Content="24" />
+                            <ComboBoxItem Content="28" />
+                            <ComboBoxItem Content="32" />
+                        </ComboBox>
+                        <ComboBox x:ConnectionId='12' x:Name="FontColorCombo"
+                                  Width="170"
+                                                                                    >
+                            <ComboBoxItem Tag="#1C2A37" Content="Ink Blue" />
+                            <ComboBoxItem Tag="#0A5C99" Content="Ocean Blue" />
+                            <ComboBoxItem Tag="#226B2A" Content="Leaf Green" />
+                            <ComboBoxItem Tag="#7A2D8F" Content="Plum" />
+                            <ComboBoxItem Tag="#9A4F00" Content="Amber" />
+                            <ComboBoxItem Tag="#9A1F1F" Content="Crimson" />
+                        </ComboBox>
+                        <Button x:ConnectionId='13' Content="Clear Format"                                 />
+                    </StackPanel>
+                </Border>
+
+                <Grid Grid.Row="2">
+                    <Border x:ConnectionId='4' x:Name="RichEditorHost" BorderThickness="1" CornerRadius="12" Padding="8">
+                        <RichEditBox x:ConnectionId='7' x:Name="RichEditor"
+                                                                         
+                                                                                   
+                                     AcceptsReturn="True"
+                                     VerticalAlignment="Stretch"
+                                     HorizontalAlignment="Stretch" />
+                    </Border>
+
+                    <Border x:ConnectionId='5' x:Name="MarkdownEditorHost"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="8"
+                            Visibility="Collapsed">
+                        <TextBox x:ConnectionId='6' x:Name="MarkdownEditor"
+                                                                         
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalAlignment="Stretch"
+                                 HorizontalAlignment="Stretch" />
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Padding="16,10">
+            <TextBlock x:ConnectionId='2' x:Name="StatusText" Text="Locked vault. Enter your master password." Opacity="0.82" />
+        </Border>
+    </Grid>
+</Window>
+

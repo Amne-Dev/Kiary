@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiary | Encrypted Diary for Windows</title>
+  <meta name="description" content="Kiary is a modern encrypted diary for Windows with rich text, markdown, and timed journal sections.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#">
+      <img src="./assets/logo.png" alt="Kiary logo">
+      <span>Kiary</span>
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#timed-journal">Timed Journal</a>
+      <a href="#privacy">Privacy</a>
+      <a class="btn btn-solid" href="#download">Download</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Windows app</p>
+        <h1>Your encrypted journal, with the feel of a native notebook.</h1>
+        <p class="sub">
+          Kiary blends rich text and markdown in one workspace, secured with local encryption and designed with a fluent Windows style.
+        </p>
+        <div class="actions">
+          <a class="btn btn-solid" href="#download">Get Kiary</a>
+          <a class="btn btn-ghost" href="#features">Explore features</a>
+        </div>
+      </div>
+
+      <div class="hero-art reveal delay-1">
+        <div class="glass-card">
+          <div class="glass-top">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="mock-content">
+            <aside>
+              <p class="mock-title">Entries</p>
+              <div class="line sm"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line sm"></div>
+            </aside>
+            <article>
+              <img src="./assets/logo.png" alt="Kiary app icon">
+              <div class="line xl"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line md"></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="section-head reveal">
+        <p class="eyebrow">Core capabilities</p>
+        <h2>Built for writing flow and secure storage.</h2>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card reveal">
+          <h3>Encrypted Vault</h3>
+          <p>Entries are encrypted and stored locally with your master password.</p>
+        </article>
+        <article class="feature-card reveal delay-1">
+          <h3>Rich Text + Markdown</h3>
+          <p>Switch formats instantly and write the way you prefer.</p>
+        </article>
+        <article class="feature-card reveal delay-2">
+          <h3>Timed Journal Syntax</h3>
+          <p>Use timestamps to create structured sections and quick navigation points.</p>
+        </article>
+        <article class="feature-card reveal">
+          <h3>Auto Save</h3>
+          <p>Continuous saving keeps your latest edits protected.</p>
+        </article>
+        <article class="feature-card reveal delay-1">
+          <h3>Import / Export</h3>
+          <p>Move your writing in and out when needed, with clear encryption warnings.</p>
+        </article>
+        <article class="feature-card reveal delay-2">
+          <h3>Native Windows Feel</h3>
+          <p>Mica, transparency, and modern controls tuned for Windows 11.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="timed-journal" class="section split">
+      <div class="reveal">
+        <p class="eyebrow">Timed journal</p>
+        <h2>Chronological writing that stays readable.</h2>
+        <p class="sub">
+          Start a line with syntax like <code>25/11/2025@10:59pm : Reflection</code> to generate timed sections in the sidebar.
+        </p>
+      </div>
+      <div class="timeline reveal delay-1">
+        <div class="point"><span>14/02/2026@09:30pm</span><p>Daily Review</p></div>
+        <div class="point"><span>15/02/2026@08:15am</span><p>Morning Plan</p></div>
+        <div class="point"><span>15/02/2026@11:05pm</span><p>Night Notes</p></div>
+      </div>
+    </section>
+
+    <section id="privacy" class="section callout reveal">
+      <h2>Private by default.</h2>
+      <p>Kiary does not require cloud sync to work. Your encrypted diary lives on your device, under your control.</p>
+    </section>
+
+    <section id="download" class="section download reveal">
+      <h2>Get Kiary</h2>
+      <p>Install through your signed package for testing, or publish through Microsoft Store for public distribution.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="#" aria-disabled="true">Windows Download</a>
+        <a class="btn btn-ghost" href="https://github.com/Amne-Dev" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Kiary by AmDev</p>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>

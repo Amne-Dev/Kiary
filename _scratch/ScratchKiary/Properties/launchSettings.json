@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ScratchKiary (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ScratchKiary (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
