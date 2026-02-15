@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "i5FoGvwwH14=",
+  "dgSpecHash": "fNK62hcyFqg=",
   "success": true,
   "projectFilePath": "C:\\Github\\Kiary\\EncryptedDiary.WinUI.csproj",
   "expectedPackageFiles": [
@@ -18,16 +18,15 @@
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsappsdk.widgets\\1.8.251231004\\microsoft.windowsappsdk.widgets.1.8.251231004.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsappsdk.winui\\1.8.260204000\\microsoft.windowsappsdk.winui.1.8.260204000.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\system.numerics.tensors\\9.0.0\\system.numerics.tensors.9.0.0.nupkg.sha512",
-    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.3\\microsoft.netcore.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\10.0.3\\microsoft.netcore.app.runtime.win-x86.10.0.3.nupkg.sha512",
+    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.3\\microsoft.netcore.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.netcore.app.runtime.win-arm64\\10.0.3\\microsoft.netcore.app.runtime.win-arm64.10.0.3.nupkg.sha512",
-    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.3\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\10.0.3\\microsoft.windowsdesktop.app.runtime.win-x86.10.0.3.nupkg.sha512",
+    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.3\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-arm64\\10.0.3\\microsoft.windowsdesktop.app.runtime.win-arm64.10.0.3.nupkg.sha512",
-    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.3\\microsoft.aspnetcore.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\10.0.3\\microsoft.aspnetcore.app.runtime.win-x86.10.0.3.nupkg.sha512",
+    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.3\\microsoft.aspnetcore.app.runtime.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-arm64\\10.0.3\\microsoft.aspnetcore.app.runtime.win-arm64.10.0.3.nupkg.sha512",
-    "C:\\Users\\amdev\\.nuget\\packages\\microsoft.netcore.app.crossgen2.win-x64\\10.0.3\\microsoft.netcore.app.crossgen2.win-x64.10.0.3.nupkg.sha512",
     "C:\\Users\\amdev\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.57\\microsoft.windows.sdk.net.ref.10.0.19041.57.nupkg.sha512"
   ],
   "logs": []

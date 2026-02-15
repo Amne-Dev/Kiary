@@ -166,3 +166,5 @@ C:\Github\Kiary\_buildcheck\Assets\logo.png
 C:\Github\Kiary\bin\Debug\net10.0-windows10.0.19041.0\Assets\logo.png
 C:\Github\Kiary\_buildcheck\Assets\logo.ico
 C:\Github\Kiary\bin\Debug\net10.0-windows10.0.19041.0\Assets\logo.ico
+C:\Github\Kiary\bin\Debug\net10.0-windows10.0.19041.0\EncryptedDiary.WinUI.exe
+C:\Github\Kiary\obj\Debug\net10.0-windows10.0.19041.0\EncryptedDiary.WinUI.sourcelink.json

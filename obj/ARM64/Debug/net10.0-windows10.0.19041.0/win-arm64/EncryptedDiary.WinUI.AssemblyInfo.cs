@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EncryptedDiary.WinUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c28c8382be87ee48ab9f7fa5ab99e12df2c42704")]
 [assembly: System.Reflection.AssemblyProductAttribute("EncryptedDiary.WinUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EncryptedDiary.WinUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
