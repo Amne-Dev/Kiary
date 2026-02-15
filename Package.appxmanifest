@@ -15,7 +15,7 @@
   <mp:PhoneIdentity PhoneProductId="7aa8ec57-bba1-4a1a-b4c3-49f8a3f72a09" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Kiary</DisplayName>
+    <DisplayName>K-iary</DisplayName>
     <PublisherDisplayName>Amne-Dev</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Kiary"
+        DisplayName="K-iary"
         Description="Kiary - Keep Diary"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

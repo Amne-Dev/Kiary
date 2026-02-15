@@ -274,3 +274,4 @@ C:\Github\Kiary\obj\x64\Release\net10.0-windows10.0.19041.0\win-x64\.winmd_cache
 C:\Github\Kiary\obj\x64\Release\net10.0-windows10.0.19041.0\win-x64\package.map.txt
 C:\Github\Kiary\obj\x64\Release\net10.0-windows10.0.19041.0\win-x64\_pkginfo.txt
 C:\Github\Kiary\obj\x64\Release\net10.0-windows10.0.19041.0\win-x64\_installerinfo.log
+C:\Github\Kiary\obj\x64\Release\net10.0-windows10.0.19041.0\win-x64\EncryptedDiary.WinUI.sourcelink.json
